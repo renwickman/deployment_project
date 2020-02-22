@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Welcome</title>
+    <style>
+        .right {
+            text-align: right;
+        }
+        .quote_right {
+            text-align: right;
+            display: inline-block;
+            margin-left: 443px;
+        }
+        .quote_left {
+            text-align: left;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <header>Welcome {{user.name}}
+        <div class="right"><a href="myaccount/edit/{{user.id}}">Edit My Account</a> <button><a href="logout">Logout</a></button></div>
+    </header>
+
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{message}}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+    <div class="quote_left">
+        {% for quote in all_quotes reversed %}
+        <tr>
+          <p><td>{{ quote.author }}</td></p>
+          <p><td>{{ quote.quote }}</td></p>
+          <p><td>Posted by <a href="/user/{{quote.user.id}}">{{ quote.user.name }}</a></td></p>
+          <p><td>{{quote.users_who_like_quote.count}} Likes</td></p>
+          <td>
+            {% if user not in quote.users_who_like_quote.all %}
+                <form action="/like/{{quote.id}}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Like">   
+                </form>
+            {% else %}
+            <form action="/unlike/{{quote.id}}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Unlike">   
+            </form>
+            {% endif %}
+          <td>{% if quote.user == user %}
+                <form action="/quoteDelete/{{quote.id}}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete">                     
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </div>
+
+    <div class="quote_right">
+    <h3>Add a Quote!</h3>
+    <form action="/quoteAdd" method="POST">
+        {% csrf_token %}
+    <p>Author <textarea rows="5" cols="50" name="author"></textarea></p>
+    <p>Quote <textarea rows="10" cols="50" name="quote"></textarea></p>
+    <p><input class="btn btn-primary" type="submit" value="Post Quote"></p>
+    </form>
+    </div> 
+    
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Wall</title>
+    <style>
+        .right {
+            text-align: right;
+        }
+        * {
+        padding: 5px;
+        }
+        .msg {
+            font-style: italic;
+            font-size: large;
+            font-weight: bold;
+        }
+        .cmt {
+            font-style: italic;
+            font-size: medium;
+            margin-left: 15px;
+        }
+        .cmt_user {
+            font-weight: bold;
+            font-weight: bolder;
+            font-size: small;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CodingDojo Wall</h1>
+    <div class="right">{{request.session.user}}<a href="logout">Logout</a></div>
+    
+    
+    <h3>Post a Message</h3>
+    <form action="/post_message" method="POST">
+        {% csrf_token %}
+    <textarea rows="5" cols="90" name="message"></textarea>
+    <p><input class="btn btn-primary" type="submit" value="Post a Message"></p>
+    </form>
+        
+    {% for message in all_messages reversed %}
+
+        {{message.user.name}} - {{message.created_at|date:'F jS Y'}}
+        {% if message.user.id == request.session.user_id %}
+        {% endif %}
+        <div class="msg">{{message.message}}</div>
+        <a href="/delete_message/{{message.id}}">Delete</a>
+        <input type="hidden" name="id" value="request.session['user_id']">
+        {% for comment in message.comments.all reversed %}
+        <div class="cmt">{{comment.comment}}</div>
+        <p class= "cmt_user">{{comment.user.name}} - {{comment.created_at|date:'F jS Y'}}
+        {% if comment.user.id == request.session.user_id %} <a href="/delete_comment/{{comment.id}}">Delete</a></p>
+        {% endif %}
+    
+    {% endfor %}
+
+    <br>
+    <br>
+    <h3>Post a Comment</h3>
+    <form action="/post_comment" method="POST">
+        {% csrf_token %}
+        <textarea name="comment" cols="60" rows="3"></textarea>
+        <p><input class="btn btn-success" value="Post Comment" type="submit"></p>
+        <input type="hidden" name="id" value="request.session['user_id']">
+        <input type="hidden" name="message_id" value="{{message.id}}">
+    </form>
+        
+    
+    {% endfor %}
+
+    
+</body>
+</html> -->

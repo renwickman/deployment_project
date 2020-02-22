@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Edit User</h1>
+
+    <header>
+        <h4>{{user.name}}' Account</h4>
+            <div class ="right"><a href="/user/{{user.id}}">Back</a> <button><a href="/logout">Logout</a></button></div>
+    </header>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{message}}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    
+    <form action="/myaccount/submit/{{user.id}}" method="POST" class="col s12">
+        {% csrf_token %}
+    <p><h3>Name</h3> <input type="text" value ={{user.name}} name="name"> </p>
+    <p><h3>Email</h3> <input type="text" value ={{user.email}} name="email"></p> 
+    <input type="submit" value="Update">
+    </form>
+
+    <!-- Put a form here that will create a Cat, I have already given you a path and a views function to use -->
+    <!-- Show error messages if there is a problem -->
+</body>
+</html>
